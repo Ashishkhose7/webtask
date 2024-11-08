@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+/* src/index.css or src/App.css */
+/* Custom background colors for Leaflet markers */
+.leaflet-marker-icon--red {
+  filter: hue-rotate(0deg) brightness(0.8); /* Red */
+}
+
+.leaflet-marker-icon--tomato {
+  filter: hue-rotate(-20deg) brightness(1.0); /* Tomato */
+}
+
+.leaflet-marker-icon--blue {
+  filter: hue-rotate(210deg) brightness(1.2); /* Blue */
+}
+/* index.css (or App.css) */
+::-webkit-scrollbar {
+  width: 6px; /* Set width for vertical scrollbar */
+  height: 6px; /* Set height for horizontal scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* Dark gray for the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280; /* Light gray on hover */
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6; /* Light gray background for the track */
+}
+
+  
+  /* Popup styling */
+  .leaflet-popup-content {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .leaflet-popup-content h3 {
+    font-size: 16px;
+    color: #333;
+  }
+  
