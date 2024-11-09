@@ -44,7 +44,7 @@ const EarthquakeMap = ({ earthquakes, selectedEarthquake }) => {
 
   useEffect(() => {
     if (selectedEarthquake) {
-      const { geometry, properties } = selectedEarthquake;
+      const { geometry } = selectedEarthquake;
       const { coordinates } = geometry;
       setSelectedCoords([coordinates[1], coordinates[0]]);
       // Trigger the popup for the selected earthquake
