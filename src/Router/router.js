@@ -14,6 +14,17 @@ const router = createBrowserRouter([
         },
       ],
     },
-  ]);
+  ],
+  {
+    // Opt into React Router v7 transition behavior
+    future: {
+      v7_startTransition: true,  // Enable startTransition in React Router v7
+      v7_partialHydration: true,
+      v7_skipActionErrorRevalidation: true,
+      v7_normalizeFormMethod: true,
+      v7_relativeSplatPath: true,
+      v7_fetcherPersist: true,
+    },
+  });
 
   export default router;
