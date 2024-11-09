@@ -1,16 +1,25 @@
+// components/EarthquakeMap.js
 import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Function to create a custom icon with a color-coded FontAwesome location icon
-const createCustomIcon = (color) => {
+// Function to determine icon color based on magnitude
+const getIconByMagnitude = (magnitude) => {
+  let color;
+  if (magnitude >= 5.0) {
+    color = 'red';
+  } else if (magnitude >= 3.0) {
+    color = 'tomato';
+  } else {
+    color = 'blue';
+  }
+
+  // Return a FontAwesome location icon with the selected color
   return L.divIcon({
-    className: '',
-    html: `<i class="fas fa-map-marker-alt" style="color: ${color}; font-size: 1.5rem;"></i>`,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
+    html: `<i class="fas fa-map-marker-alt" style="color: ${color}; font-size: 24px;"></i>`,
+    iconSize: [24, 24],
+    className: 'text-center',
   });
 };
 
@@ -28,26 +37,14 @@ function ResetCenter({ coords }) {
   return null;
 }
 
-// Define color-coded icons based on earthquake magnitude
-const redIcon = createCustomIcon('red');
-const tomatoIcon = createCustomIcon('tomato');
-const blueIcon = createCustomIcon('blue');
-
 const EarthquakeMap = ({ earthquakes, selectedEarthquake }) => {
+  const mapRef = useRef(null);
   const [selectedCoords, setSelectedCoords] = useState(null);
-  const mapRef = useRef(null);  // Store map reference
-  const markersRef = useRef({});  // Store marker references by ID
+  const markersRef = useRef({});
 
-  const getIconByMagnitude = (magnitude) => {
-    if (magnitude >= 6) return redIcon;
-    if (magnitude >= 4) return tomatoIcon;
-    return blueIcon;
-  };
-
-  // Center map and open popup for selected earthquake
   useEffect(() => {
     if (selectedEarthquake) {
-      const { geometry } = selectedEarthquake;
+      const { geometry, properties } = selectedEarthquake;
       const { coordinates } = geometry;
       setSelectedCoords([coordinates[1], coordinates[0]]);
       // Trigger the popup for the selected earthquake
@@ -56,13 +53,15 @@ const EarthquakeMap = ({ earthquakes, selectedEarthquake }) => {
         marker.openPopup();
       }
     }
-  }, [selectedEarthquake]);  // Trigger whenever the selected earthquake changes
+  }, [selectedEarthquake]);
 
   return (
     <MapContainer
-    center={selectedCoords || [20, 0]}
-    zoom={selectedCoords ? 6 : 2}      className="h-full w-full"
-      whenCreated={(map) => (mapRef.current = map)} // Store map reference
+      center={selectedCoords || [20, 0]}
+      zoom={selectedCoords ? 6 : 2} // Zoom in if an earthquake is selected
+      scrollWheelZoom={true}
+      className="h-full w-full"
+      whenCreated={(map) => (mapRef.current = map)}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -74,8 +73,8 @@ const EarthquakeMap = ({ earthquakes, selectedEarthquake }) => {
           <Marker
             key={quake.id}
             position={[coordinates[1], coordinates[0]]}
-            icon={getIconByMagnitude(quake.properties.mag)}
-            ref={(el) => (markersRef.current[quake.id] = el)} // Store reference to the marker
+            icon={getIconByMagnitude(quake.properties.mag)} // Use the custom icon based on magnitude
+            ref={(el) => (markersRef.current[quake.id] = el)} // Store the marker reference
           >
             <Popup>
               <div className="text-gray-800">
@@ -88,8 +87,8 @@ const EarthquakeMap = ({ earthquakes, selectedEarthquake }) => {
           </Marker>
         );
       })}
-      {/* Add the ResetCenter component to update the map position when an earthquake is selected */}
-      {selectedCoords && (
+        {/* Add the ResetCenter component to update the map position when an earthquake is selected */}
+        {selectedCoords && (
           <ResetCenter coords={selectedCoords} />
         )}
     </MapContainer>
